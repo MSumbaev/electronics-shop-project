@@ -49,6 +49,8 @@ class Item:
 
     @classmethod
     def instantiate_from_csv(cls):
+        """Класс-метод, инициализирующий экземпляры класса `Item` данными из файла _src/items.csv
+        При инициализации экземпляров из файла старые экземпляры удаляются."""
 
         cls.all.clear()
 
@@ -59,6 +61,9 @@ class Item:
 
     @staticmethod
     def string_to_number(number: str):
+        """Статический метод, возвращающий число из числа-строки.
+        Если есть буквы в number присваивает переменной значение = 0."""
+
         if isinstance(number, str):
             try:
                 float(number)

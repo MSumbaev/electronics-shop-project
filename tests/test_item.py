@@ -1,9 +1,20 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
+import pytest
+
 from src.item import Item
+from src.phone import Phone
 
 item1 = Item("Смартфон", 10000, 3)
 item2 = Item("Ноутбук", 20000, 1)
+phone1 = Phone("iPhone 14", 120_000, 5, 2)
 
+
+def test_add():
+    assert item1 + phone1 == 8
+    assert phone1 + phone1 == 10
+    with pytest.raises(ValueError):
+        phone1 + "Утюг"
+        item1 + 100
 
 def test_repr():
     assert repr(item1) == "Item('Смартфон', 10000, 3)"
@@ -36,11 +47,11 @@ def test_item_attributes():
     assert item1.quantity == 3
     assert item2.quantity == 1
 
-    assert len(Item.all) == 2
+    assert len(Item.all) == 3
 
     item3 = Item("Монитор", 5000, 10)
 
-    assert len(Item.all) == 3
+    assert len(Item.all) == 4
 
 
 def test_change_name():

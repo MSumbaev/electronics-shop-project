@@ -1,7 +1,7 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
 import pytest
 
-from src.item import Item
+from src.item import Item, InstantiateCSVError
 from src.phone import Phone
 
 item1 = Item("Смартфон", 10000, 3)
@@ -15,6 +15,7 @@ def test_add():
     with pytest.raises(ValueError):
         phone1 + "Утюг"
         item1 + 100
+
 
 def test_repr():
     assert repr(item1) == "Item('Смартфон', 10000, 3)"
@@ -66,12 +67,31 @@ def test_change_long_name():
     assert item1.name == "Планшет"
 
 
+# Если файл items.csv правильно записан.
 def test_instantiate_from_csv():
     Item.instantiate_from_csv()
     assert len(Item.all) == 5
 
     item1 = Item.all[2]
     assert item1.name == 'Кабель'
+
+
+# Если файл items.csv отсутствует.
+def test_file_items_csv_not_found():
+
+    Item.path_file_csv = "??????"
+
+    with pytest.raises(FileNotFoundError):
+        Item.instantiate_from_csv()
+
+
+# Если в файле меньше 3 колонок, либо названия колонок не 'name' 'price' 'quantity'
+def test_file_instantiate_cvs_error():
+
+    Item.path_file_csv = "tests/test_items.csv"
+
+    with pytest.raises(InstantiateCSVError):
+        Item.instantiate_from_csv()
 
 
 def test_string_to_number():

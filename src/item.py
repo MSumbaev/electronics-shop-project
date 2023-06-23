@@ -7,6 +7,7 @@ class Item:
     """
     pay_rate = 1.0
     all = []
+    path_file_csv = "src/items.csv"
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """
@@ -66,10 +67,21 @@ class Item:
 
         cls.all.clear()
 
-        with open("src/items.csv", encoding="cp1251") as f:
-            reader = DictReader(f)
-            for line in reader:
-                cls(line["name"], line["price"], line["quantity"])
+        try:
+            with open(Item.path_file_csv, encoding="cp1251") as f:
+                reader = DictReader(f)
+
+                if len(reader.fieldnames) < 3:
+                    raise InstantiateCSVError("Файл items.csv поврежден")
+                for field in reader.fieldnames:
+                    if field not in ["name", "price", "quantity"]:
+                        raise InstantiateCSVError("Файл items.csv поврежден")
+
+                for line in reader:
+                    cls(line["name"], line["price"], line["quantity"])
+
+        except FileNotFoundError:
+            raise FileNotFoundError("Отсутствует файл item.csv")
 
     @staticmethod
     def string_to_number(number: str):
@@ -85,3 +97,7 @@ class Item:
             return int(float(number))
         else:
             print("Данные не являются строкой!")
+
+
+class InstantiateCSVError(Exception):
+    pass
